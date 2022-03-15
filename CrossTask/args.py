@@ -4,12 +4,8 @@ import sys
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    if os.path.isdir("/gpfs-volume/Procedure-Planning/CrossTask"):
-        data_path = "/group-volume/Multimodal-Learning"
-    elif os.path.isdir("/home/zhufl/Data2/Procedure-Planning"):
-        data_path = "/home/zhufl/Data2/Procedure-Planning/CrossTask"
-    else:
-        data_path = "/group-volume/Multimodal-Learning"
+    # Declare default path for Dataset
+    data_path = "CrossTask"
 
     parser.add_argument(
         "--transformer",
@@ -32,50 +28,42 @@ def parse_args():
     parser.add_argument(
         "--primary_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_release/tasks_primary.txt',
         default=os.path.join(data_path, "crosstask_release/tasks_primary.txt"),
         help="list of primary tasks",
     )
     parser.add_argument(
         "--related_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_release/tasks_related.txt',
         default=os.path.join(data_path, "crosstask_release/tasks_related.txt"),
         help="list of related tasks",
     )
     parser.add_argument(
         "--annotation_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_release/annotations',
         default=os.path.join(data_path, "crosstask_release/annotations"),
         help="path to annotations",
     )
     parser.add_argument(
         "--video_csv_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_release/videos.csv',
         default=os.path.join(data_path, "crosstask_release/videos.csv"),
         help="path to video csv",
     )
     parser.add_argument(
         "--val_csv_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_release/videos_val.csv',
         default=os.path.join(data_path, "crosstask_release/videos_val.csv"),
         help="path to validation csv",
     )
     parser.add_argument(
         "--features_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_features',
         default=os.path.join(data_path, "crosstask_features"),
-        # default=os.path.join(data_path, 'processed_data'),
         help="path to features",
     )
     parser.add_argument(
         "--constraints_path",
         type=str,
-        # default='/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/crosstask_constraints',
         default=os.path.join(data_path, "crosstask_constraints"),
         help="path to constraints",
     )
