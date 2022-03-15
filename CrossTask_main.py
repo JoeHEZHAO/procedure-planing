@@ -15,37 +15,36 @@ import pickle
 
 import collections
 from CrossTask.args import parse_args
-from CrossTask.data_newdata_all import *
-from CrossTask.data_multimodal7 import *
+from CrossTask.CrossTask_dataloader import *
 
 from eval_util import *
-from utils_ex import *
+from utils import *
 from layers import *
-from model_tqn_complete import *
+from model import *
 from collections import Counter
-from utils_complete import *
 import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device {} for experiment".format(device))
 
-# Mean/Variance value of visual feature as well as language feature
-# Estimated from train-set;
+##############################################################################################
+# Mean/Variance value of visual feature as well as language feature Estimated from train-set #
+##############################################################################################
 mean_lang = 0.038948704
 mean_vis = 0.000133333
 var_lang = 33.063942
 var_vis = 0.00021489676
 
 args = parse_args()
-# args.spec_note = "GANloss"
 args.spec_note = "completeLoss"
 args.d_model = 128
 args.noise_dim = 32
 args.batch_size = 32
+args.exist_datasplit = True
 print("Using the following arguments for experiments: \n {}".format(args))
 
 """Declaring the tensorboard to log the stats"""
-dir_path = "./result_{}_{}_{}_{}_{}_l{}h{}_{}".format(
+dir_path = "output_logging/result_{}_{}_{}_{}_{}_l{}h{}_{}".format(
     args.dataset,
     args.modeltype,
     args.dataloader_type,
@@ -56,16 +55,17 @@ dir_path = "./result_{}_{}_{}_{}_{}_l{}h{}_{}".format(
     args.spec_note,
 )
 
+########################################
+# Start Loading/Processing the dataset #
+########################################
 if not os.path.exists(dir_path):
-    os.mkdir(dir_path)
-
+    os.makedirs(dir_path)
 task_vids = get_vids(args.video_csv_path)
 val_vids = get_vids(args.val_csv_path)
 task_vids = {
     task: [vid for vid in vids if task not in val_vids or vid not in val_vids[task]]
     for task, vids in task_vids.items()
 }
-
 primary_info = read_task_info(args.primary_path)
 test_tasks = set(primary_info["steps"].keys())
 if args.use_related:
@@ -80,48 +80,92 @@ task_vids = {task: vids for task,
              vids in task_vids.items() if task in all_tasks}
 val_vids = {task: vids for task, vids in val_vids.items() if task in all_tasks}
 
-"""
-Random Split dataset by video
-"""
-train_vids, test_vids = random_split(task_vids, test_tasks, args.n_train, seed=99999999)
-#train_vids, _ = random_split_v1(task_vids, test_tasks, args.n_train, seed=99999999)
-#test_vids, _ = random_split_v1(val_vids, test_tasks, args.n_train, seed=99999999)
-
-# with open('/Users/he.zhao/Workspace/Procedure-Planning/CrossTask/cls_step.json', 'r') as f:
 with open(os.path.join(args.data_path, "crosstask_release/cls_step.json"), "r") as f:
-    # with open(os.path.join(args.data_path, "crosstask_release/cls_step_v1.json"), "r") as f:
     step_cls = json.load(f)
-
 with open(os.path.join(args.data_path, "activity_step.json"), "r") as f:
     act_cls = json.load(f)
 
-trainset = CrossTaskDataset(
-    task_vids,
-    n_steps,
-    args.features_path,
-    args.annotation_path,
-    step_cls,
-    pred_h=args.pred_horz,
-    act_json=act_cls,
-)
-"""Run data whitening """
+##################################
+# If using existing data-split   #
+##################################
+if args.exist_datasplit:
+    with open("./checkpoints/CrossTask_t{}_datasplit.pth".format(args.pred_horz), "rb") as f:
+        datasplit = pickle.load(f)
+    trainset = CrossTaskDataset(
+        task_vids,
+        n_steps,
+        args.features_path,
+        args.annotation_path,
+        step_cls,
+        pred_h=args.pred_horz,
+        act_json=act_cls,
+    )
+    testset = CrossTaskDataset(
+        task_vids,
+        n_steps,
+        args.features_path,
+        args.annotation_path,
+        step_cls,
+        pred_h=args.pred_horz,
+        act_json=act_cls,
+        train=False,
+    )
+    trainset.plan_vids = datasplit["train"]
+    testset.plan_vids = datasplit["test"]
+
+else:
+    """ Random Split dataset by video """
+    train_vids, test_vids = random_split(
+        task_vids, test_tasks, args.n_train, seed=99999999)
+
+    trainset = CrossTaskDataset(
+        train_vids,
+        n_steps,
+        args.features_path,
+        args.annotation_path,
+        step_cls,
+        pred_h=args.pred_horz,
+        act_json=act_cls,
+    )
+
+    # Run random_split for eval/test sub-set
+    # trainset.random_split()
+    testset = CrossTaskDataset(
+        test_vids,
+        n_steps,
+        args.features_path,
+        args.annotation_path,
+        step_cls,
+        pred_h=args.pred_horz,
+        act_json=act_cls,
+        train=False,
+    )
+
+#######################
+# Run data whitening  #
+#######################
 trainset.mean_lan = mean_lang
 trainset.mean_vis = mean_vis
 trainset.var_lan = var_lang
 trainset.var_vis = var_vis
+testset.mean_lan = mean_lang
+testset.mean_vis = mean_vis
+testset.var_lan = var_lang
+testset.var_vis = var_vis
 
-# Run random_split for eval/test sub-set
-trainset.random_split()
-
-# Calculate the Transition Matrix for Viterbi Decoding Algorithm
+##################################################################
+# Calculate the Transition Matrix for Viterbi Decoding Algorithm #
+##################################################################
 transition_matrix = get_transition_matrix(trainset, 106)[1:, 1:]
-
-# Normalize the Transition Matrix row-by-row
+""" Normalize the Transition Matrix row-by-row """
 for i in range(transition_matrix.shape[1]):
     transition_matrix[:, i] = sample_softmax_with_temperature(
         transition_matrix[:, i],
     )
 
+#######################
+# Init the DataLoader #
+#######################
 trainloader = DataLoader(
     trainset,
     batch_size=args.batch_size,
@@ -130,46 +174,6 @@ trainloader = DataLoader(
     drop_last=True,
     collate_fn=collate_func,
 )
-"""Run data whitening """
-trainset.mean_lan = mean_lang
-trainset.mean_vis = mean_vis
-trainset.var_lan = var_lang
-trainset.var_vis = var_vis
-print(
-    "data whitening lang-mean {}, lang-var {}".format(
-        trainset.mean_lan, trainset.var_lan
-    )
-)
-
-"""Saving the data split to local """
-datasplit = {}
-datasplit["train"] = trainset.train_plan_vids
-datasplit["test"] = trainset.test_plan_vids
-with open("tqn_main_t{}_datasplit_v2.pth".format(args.pred_horz), "wb") as f:
-    pickle.dump(datasplit, f)
-
-testset = CrossTaskDataset(
-    # test_vids,
-    task_vids,
-    n_steps,
-    args.features_path,
-    args.annotation_path,
-    step_cls,
-    pred_h=args.pred_horz,
-    act_json=act_cls,
-    train=False,
-)
-testset.plan_vids = trainset.test_plan_vids
-"""Run data whitening """
-testset.mean_lan = mean_lang
-testset.mean_vis = mean_vis
-testset.var_lan = var_lang
-testset.var_vis = var_vis
-
-# Show stats of train/test dataset
-print("Training dataset has {} samples".format(len(trainset)))
-print("Testing dataset has {} samples".format(len(testset)))
-
 testloader = DataLoader(
     testset,
     batch_size=args.batch_size,
@@ -178,13 +182,28 @@ testloader = DataLoader(
     drop_last=False,
     collate_fn=collate_func,
 )
+# Show stats of train/test dataset
+print("Training dataset has {} samples".format(len(trainset)))
+print("Testing dataset has {} samples".format(len(testset)))
 
 """Get all reference from test-set, for KL-Divgence, NLL, MC-Prec and MC-Rec"""
 reference = [x[2] for x in testset.plan_vids]
 all_ref = np.array(reference)
 
-vis_emb_dim, act_emb_dim, act_size, hidden_size = 512 + 128, 128, 106, 128
+##################################
+# Saving the data split to local #
+##################################
+if not args.exist_datasplit:
+    datasplit = {}
+    datasplit["train"] = trainset.train_plan_vids
+    datasplit["test"] = trainset.test_plan_vids
+    with open("CrossTask_t{}_datasplit.pth".format(args.pred_horz), "wb") as f:
+        pickle.dump(datasplit, f)
 
+########################################
+# Start Loading/Initializing the Model #
+########################################
+vis_emb_dim, act_emb_dim, act_size, hidden_size = 512 + 128, 128, 106, 128 # 512 (s3d) + 128 (vgg-audio)
 model = ProcedureFormer(
     input_dim=vis_emb_dim,
     d_model=args.d_model,
@@ -196,6 +215,9 @@ model = ProcedureFormer(
     noise_dim=args.noise_dim,
 ).to(device)
 
+#######################
+# Init the optimizers #
+#######################
 optimizer = optim.Adam(
     [
         {"params": model.state_encoder.parameters()},
@@ -209,23 +231,19 @@ optimizer = optim.Adam(
     ],
     lr=7e-4,
 )
-
-# optimizer = optim.RMSprop(model.parameters(), lr=7e-4)
 optimizer_d = optim.Adam(
     [
+        {"params": model.discriminator_pred_cls_enc.parameters()},
         {"params": model.discriminator1.parameters()},
-        # {'params': model.discriminator_pred_cls_enc.parameters()},
         {"params": model.discriminator2.parameters()},
     ],
-    lr=1e-4,
+    lr=1e-5,
 )
-# optimizer = optim.RMSprop(model.parameters(), lr=1e-3)
-# optimizer = optim.RMSprop(model.parameters(), lr=1e-2)
 scheduler = torch.optim.lr_scheduler.StepLR(
     optimizer, 20, gamma=0.65, last_epoch=-1)
 
 #######################################################################################
-#    Empirically decided Weighted CrossEntropy Loss for long-tailed distributition    #
+#    Empirically decided Weighted CrossEntropy Loss for long-tailed distribution      #
 #######################################################################################
 ce_weight = torch.ones(106)
 ce_inds = [1, 5, 37, 57, 35, 36]
@@ -238,17 +256,14 @@ nce_loss = MILNCELoss_V2()
 contra_loss = CrossEntropyLoss()
 bce_loss = th.nn.BCELoss()
 
-# Load all language embedding
+#########################################
+#  Load pre-trained language embedding  #
+#########################################
 with open("./act_lang_emb.pkl", "rb") as f:
     act_lang_emb = pickle.load(f)
-
-# Sorting a bit based on the key values
 act_lang_emb_sorted = collections.OrderedDict(sorted(act_lang_emb.items()))
-
-# Organize values into torch tensor
 act_tensor_list = list(act_lang_emb_sorted.values())
-act_tensor_emb = torch.stack([torch.from_numpy(x)
-                             for x in act_tensor_list]).cuda()
+act_tensor_emb = torch.stack([torch.from_numpy(x) for x in act_tensor_list]).cuda()
 
 def train_complete_loss(epoch, NDR_train=True):
     """
@@ -261,6 +276,7 @@ def train_complete_loss(epoch, NDR_train=True):
 
     print("For epoch {}, start training the model-generator with complete loss".format(epoch))
     model.train()
+    adv_d_N = 2
 
     for batch in trainloader:
         optimizer.zero_grad()
@@ -288,10 +304,9 @@ def train_complete_loss(epoch, NDR_train=True):
             w = th.cat([start_token, w], 1).long()
 
             # start = time.time()
-            logits, state, _ = model(x, args.pred_horz)            
+            logits, state, _ = model(x, args.pred_horz)
             # print("Transformer running time is {}".format(time.time() - start))
             gt_state = model.state_encoder(x).mean(2)
-
 
             state_pred_list.append(state)
             word_pred_list.append(logits)
@@ -317,19 +332,23 @@ def train_complete_loss(epoch, NDR_train=True):
             if NDR_train:
                 num_ndr_sample = 2
                 noise_z = (
-                        torch.randn(num_ndr_sample,
-                                    args.noise_dim).cuda()
-                    ) * 1  # Standard normal noise multiply variance, {1, 2, 5, 10} all would work;
+                    torch.randn(num_ndr_sample,
+                                args.noise_dim).cuda()
+                ) * 1  # Standard normal noise multiply variance, {1, 2, 5, 10} all would work;
                 "Repeat the noise for every horizon step:"
-                noise_z = noise_z.reshape(1, num_ndr_sample, args.noise_dim).repeat(x.shape[1], 1, 1)
+                noise_z = noise_z.reshape(
+                    1, num_ndr_sample, args.noise_dim).repeat(x.shape[1], 1, 1)
                 replicate_x = x.repeat(num_ndr_sample, 1, 1, 1)
                 _, state_pred_samples = model.inference(
                     replicate_x, noise_z, args.pred_horz, NDR=True)
                 # state_pred_samples = state_pred_samples.reshape(
                 #     args.pred_horz, num_ndr_sample, -1).permute(1, 0, 2).reshape(1, num_ndr_sample, -1)
-                state_1, state_2 = torch.unbind(state_pred_samples.mean(0), dim=0)
-                noise_z1, noise_z2 = torch.unbind(noise_z.reshape(args.pred_horz+1, num_ndr_sample, -1).mean(0), dim=0)
-                loss_ndr_tmp = torch.mean(torch.abs(state_1 - state_2)) / torch.mean(torch.abs(noise_z1 - noise_z2))
+                state_1, state_2 = torch.unbind(
+                    state_pred_samples.mean(0), dim=0)
+                noise_z1, noise_z2 = torch.unbind(noise_z.reshape(
+                    args.pred_horz+1, num_ndr_sample, -1).mean(0), dim=0)
+                loss_ndr_tmp = torch.mean(
+                    torch.abs(state_1 - state_2)) / torch.mean(torch.abs(noise_z1 - noise_z2))
                 eps = 1 * 1e-5
                 loss_ndr.append(1 / (eps + loss_ndr_tmp))
             else:
@@ -338,12 +357,16 @@ def train_complete_loss(epoch, NDR_train=True):
         "Gumbel Sampling for Adv"
         pred_word_tensor = torch.stack(word_pred_list)
         pred_word_sampling = sample_gumbel_softmax(
-            pred_word_tensor.reshape(-1, act_size), temperature=0.5 # Tune this temperature for better results;
+            # Tune this temperature for better results;
+            pred_word_tensor.reshape(-1, act_size), temperature=0.5
         )
         "Encode pred_word_sampling as well as the ground-truth word"
-        pred_word_sampling_enc = torch.matmul(pred_word_sampling, model.discriminator_pred_cls_enc.weight)
-        pred_word_sampling_enc = pred_word_sampling_enc.reshape(args.batch_size, args.pred_horz, -1)
-        real_word_tensor = torch.cat([torch.zeros(torch.stack(label_onehot_list)[:, :, 0:1].shape).cuda(), torch.stack(label_onehot_list)],-1).cuda()
+        pred_word_sampling_enc = torch.matmul(
+            pred_word_sampling, model.discriminator_pred_cls_enc.weight)
+        pred_word_sampling_enc = pred_word_sampling_enc.reshape(
+            args.batch_size, args.pred_horz, -1)
+        real_word_tensor = torch.cat([torch.zeros(torch.stack(label_onehot_list)[
+                                     :, :, 0:1].shape).cuda(), torch.stack(label_onehot_list)], -1).cuda()
 
         real_word_enc = torch.matmul(
             real_word_tensor,
@@ -361,7 +384,6 @@ def train_complete_loss(epoch, NDR_train=True):
 
         """Define two fashion for mil-nce loss"""
         c_loss_v1 = contra_loss(pred_gt_sim, labels)
-        # c_loss_v2 = nce_loss(pred_gt_sim, pred_gt_sim_y, labels)
 
         "Adv learning for Generator "
         state_pred_tensor = torch.stack(state_pred_list).squeeze()
@@ -375,11 +397,10 @@ def train_complete_loss(epoch, NDR_train=True):
             args.batch_size, args.pred_horz, -1
         )
 
-
         g_fake_logits = torch.nn.functional.sigmoid(
             model.discriminator_forward(
                 torch.cat([state_pred_tensor, pred_word_sampling_enc], -1)
-                ).squeeze()
+            ).squeeze()
         )
 
         g_real_logits = torch.nn.functional.sigmoid(
@@ -397,12 +418,12 @@ def train_complete_loss(epoch, NDR_train=True):
         # Loss for Generator
         loss2 = sum(loss2) / len(loss2)
         if NDR_train:
-            loss = loss2 + 0.5 * c_loss_v1 + 0.5 * adv_g_loss + 0.1 * (sum(loss_ndr) / len(loss_ndr))
+            loss = loss2 + 0.5 * c_loss_v1 + 0.1 * adv_g_loss + \
+                0.1 * (sum(loss_ndr) / len(loss_ndr))
         else:
-            loss = loss2 + 0.5 * c_loss_v1 + 0.5 * adv_g_loss
+            loss = loss2 + 0.5 * c_loss_v1 + 0.1 * adv_g_loss
 
-        if (epoch+1) % 2 == 0:
-
+        if (epoch+1) % adv_d_N == 0:
             "Adv learning for Discriminator, with an interval of adv_d_N epoch "
             adv_d_loss = 0.5 * bce_loss(g_fake_logits, gt_real)
             adv_d_loss.backward()
@@ -751,9 +772,9 @@ def train_NDR(epoch):
             #     state_pred_list_sample.append(state)
 
             noise_z = (
-                    torch.randn(1, num_ndr_sample,
-                                args.noise_dim).cuda()
-                ) * 1  # Standard normal noise multiply variance, {1, 2, 5, 10} all would work;
+                torch.randn(1, num_ndr_sample,
+                            args.noise_dim).cuda()
+            ) * 1  # Standard normal noise multiply variance, {1, 2, 5, 10} all would work;
             "Repeat the noise for every horizon step:"
             noise_z = noise_z.repeat(x.shape[1], 1, 1)
 
@@ -766,7 +787,8 @@ def train_NDR(epoch):
             state_pred_samples = state_preds
             state_pred_samples = state_pred_samples.reshape(
                 args.pred_horz, num_ndr_sample, -1)
-            noise_z_samples = noise_z[1:].reshape(args.pred_horz, num_ndr_sample, -1)
+            noise_z_samples = noise_z[1:].reshape(
+                args.pred_horz, num_ndr_sample, -1)
 
             loss = NDiv_loss(noise_z_samples, state_pred_samples)
             loss_ndr.append(loss.sum())
@@ -779,7 +801,8 @@ def train_NDR(epoch):
         total_loss.append(loss)
         optimizer.step()
 
-    print("For Epoch {}, finishing training G with NDR loss {}".format(epoch, sum(total_loss) / len(total_loss)))
+    print("For Epoch {}, finishing training G with NDR loss {}".format(
+        epoch, sum(total_loss) / len(total_loss)))
 
 def eval(epoch, model_path=False):
     gt_list = []
@@ -939,7 +962,7 @@ def eval(epoch, model_path=False):
                     nll_rst.append(sum(nll_tmp) / len(nll_tmp))
 
                     ref_ce_rst = (
-                        custom_cross_entropy_v2(
+                        custom_KLDiv(
                             model_logits,
                             ref_dist,
                         )
@@ -982,25 +1005,12 @@ def eval(epoch, model_path=False):
     miou = acc_iou(rst, gt, False)
     macc = mean_category_acc(rst.flatten().tolist(), gt.flatten().tolist())
 
-    avg_ce = sum(ref_ce_list) / len(ref_ce_list)
-    # avg_mc = sum(mc_list) / len(mc_list)
-    # avg_mc_recall = sum(mc_recall) / len(mc_recall)
-    avg_nll = sum(nll_rst) / len(nll_rst)
-    # avg_ce = 0
-    avg_mc = 0
-    avg_mc_recall = 0
-
     print(
-        "For epoch {} using viterbi-algorithm, Best Success Rate {}, meanIOU {}, meanACC {}, meanEntropy {}, Ref-KLDiv {}, MC {}, MC-Recall {}, Avg.NLL {}".format(
+        "For epoch {} using viterbi-algorithm, Best Success Rate {}, meanIOU {}, meanACC {}".format(
             epoch,
             sr.mean(),
             miou.mean(),
-            macc,
-            sum(pred_entropy_list) / len(pred_entropy_list),
-            avg_ce,
-            avg_mc,
-            avg_mc_recall,
-            avg_nll,
+            macc
         )
     )
     sr = success_rate(rst_argmax, gt, False)
@@ -1012,13 +1022,11 @@ def eval(epoch, model_path=False):
         rst_argmax.flatten().tolist(), gt.flatten().tolist())
 
     print(
-        "For epoch {} using argmax, Best Success Rate {}, meanIOU {}, meanACC {} and meanEntropy {}".format(
+        "For epoch {} using argmax, Best Success Rate {}, meanIOU {}, meanACC {}".format(
             epoch,
             sr.mean(),
             miou.mean(),
-            macc,
-            sum(pred_entropy_list) / len(pred_entropy_list),
-        )
+            macc)
     )
 
     sr = success_rate(rst_mode, gt, False)
@@ -1030,15 +1038,12 @@ def eval(epoch, model_path=False):
         rst_mode.flatten().tolist(), gt.flatten().tolist())
 
     print(
-        "For epoch {} using mode, Best Success Rate {}, meanIOU {}, meanACC {} and meanEntropy {}".format(
+        "For epoch {} using mode, Best Success Rate {}, meanIOU {}, meanACC {}".format(
             epoch,
             sr.mean(),
             miou.mean(),
-            macc,
-            sum(pred_entropy_list) / len(pred_entropy_list),
-        )
+            macc)
     )
-
 
 def inference(epoch, model_path=False, num_sampling=50):
     global args
@@ -1081,7 +1086,8 @@ def inference(epoch, model_path=False, num_sampling=50):
                 print("Sampling from noise only")
                 for _ in range(num_sampling):
                     # noise with some variance
-                    noise_z = torch.randn(x.shape[1], x.shape[0], 32).cuda() * 10
+                    noise_z = torch.randn(
+                        x.shape[1], x.shape[0], 32).cuda() * 10
                     logits, _ = model.inference(x, noise_z, args.pred_horz)
                     model_logits = logits.clone().squeeze()
                     rst_argmax = model_logits.argmax(1)
@@ -1104,25 +1110,12 @@ def inference(epoch, model_path=False, num_sampling=50):
 
                 with torch.no_grad():
                     replicate_x = x.repeat(num_sampling, 1, 1, 1)
-                    new_noise =  torch.randn(replicate_x.shape).cuda() * 4
-                    # replicate_x += new_noise
-                    # start = time.time()
                     logits, _ = model.inference(
                         replicate_x, noise_z, args.pred_horz)
                     model_logits = logits.clone().squeeze().cuda()
 
-                # Comment out if using gumbel_softmax trick
-                    '''
-                    rst_argmax = sample_gumbel_softmax(
-                    model_logits,
-                    1,
-                    10.0,
-                    ).argmax(1)
-                    '''
-
                 # Comment out if using
                 rst_argmax = model_logits.argmax(-1).permute(1, 0)
-                # sample_listing.append(rst_argmax)
                 sample_listing = rst_argmax
 
                 "For mode eval"
@@ -1136,14 +1129,15 @@ def inference(epoch, model_path=False, num_sampling=50):
                 ref_onehot.zero_()
 
                 """Make this run in parallel"""
-                ref_onehot_tmp = torch.FloatTensor(rst_argmax.shape[0],args.pred_horz, act_size).cuda().zero_()
+                ref_onehot_tmp = torch.FloatTensor(
+                    rst_argmax.shape[0], args.pred_horz, act_size).cuda().zero_()
                 vec_stack = sample_listing
-                ref_onehot_tmp.scatter_(2, vec_stack.view(rst_argmax.shape[0], args.pred_horz, -1), 1)
+                ref_onehot_tmp.scatter_(2, vec_stack.view(
+                    rst_argmax.shape[0], args.pred_horz, -1), 1)
                 ref_onehot = ref_onehot_tmp.sum(0)
 
                 new_logits = F.softmax(ref_onehot / 100, -1)
                 # new_logits = F.softmax(ref_onehot, -1)
-
 
                 #################
                 #  Run Viterbi  #
@@ -1272,25 +1266,8 @@ def inference(epoch, model_path=False, num_sampling=50):
                 ####################################
                 #   Calculate the KL-Div  Metric   #
                 ####################################
-                # klv_list.append(
-                #     custom_cross_entropy(
-                #         sample_softmax_with_temperature(ref_onehot, 2),
-                #         sample_softmax_with_temperature(ref_dist, 2),
-                #     ).cpu().numpy()
-                # )
-                # klv_rst = (
-                #     custom_cross_entropy(
-                #         ref_onehot,
-                #         ref_dist,
-                #     )
-                #     .cpu()
-                #     .numpy()
-                # )
-                # klv_rst = np.where(np.isnan(klv_rst), 0, klv_rst)
-                # klv_list.append(klv_rst)
-
                 klv_rst = (
-                    custom_cross_entropy(
+                    custom_KLDiv(
                         sample_softmax_with_temperature(ref_onehot, 0.5),
                         sample_softmax_with_temperature(ref_dist, 0.5),
                     )
@@ -1357,7 +1334,6 @@ def inference(epoch, model_path=False, num_sampling=50):
             sr.mean(),
             miou.mean(),
             macc,
-            # sum(pred_entropy_list) / len(pred_entropy_list),
             avg_entropy,
         )
     )
@@ -1376,38 +1352,27 @@ def inference(epoch, model_path=False, num_sampling=50):
             sr.mean(),
             miou.mean(),
             macc,
-            # sum(pred_entropy_list) / len(pred_entropy_list),
             avg_entropy,
         )
     )
-
 
 if __name__ == "__main__":
     train = True
     train = False
     if train:
         for i in range(200):
-            # train_complete_loss(i, NDR_train=False)
-            train_regular(i)
+            train_complete_loss(i, NDR_train=True)
+            # train_regular(i)
             "Adjust the learning-rate by epoch steps"
             scheduler.step()
             eval(i)
-            torch.save(model.state_dict(), os.path.join(dir_path, "epoch_{}.pth".format(i)))
+            torch.save(model.state_dict(), os.path.join(
+                dir_path, "epoch_{}.pth".format(i)))
     else:
-        # i = '23_3'
-        # i = '23-4'
-        # i = 25
-        i = 14
-        print("using epoch id {}".format(i))
         model_path = (
             os.path.join(
-                dir_path,
-                    "epoch_{}.pth".format(
-                    # "best_{}.pth".format(
-                    # '23_3',
-                    i
-                ),
+                'checkpoints',
+                "best_CrossTask.pth"
             ),
         )
-        # eval(0, model_path=model_path[0])
         inference(0, model_path=model_path[0], num_sampling=200)

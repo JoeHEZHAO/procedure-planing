@@ -2,7 +2,6 @@ import argparse
 import os
 import sys
 
-
 def parse_args():
     parser = argparse.ArgumentParser()
     if os.path.isdir("/gpfs-volume/Procedure-Planning/CrossTask"):
