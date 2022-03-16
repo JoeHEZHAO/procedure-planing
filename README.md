@@ -61,7 +61,7 @@ python InstVids2TFRecord_COIN.py
 bash lmdb_encode_COIN.sh 1 1
 ```
 ### (ii) Train and Evaluation
-The code for COIN is in the same design before.
+The train/evaluation code for COIN is in the same design before.
 ```
 python COIN_main.py
 ```
@@ -89,7 +89,7 @@ python InstVids2TFRecord_NIV.py
 bash lmdb_encode_NIV.sh 1 1
 ```
 ### (ii) Train and Evaluation
-The code for NIV is in the same design before.
+The train/evaluation code for NIV is in the same design before.
 ```
 python NIV_main.py
 ```
