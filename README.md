@@ -40,7 +40,7 @@ python InstVids2TFRecord_CrossTask.py
 bash lmdb_encode_CrossTask.sh 1 1
 ```
 ### (ii) Train and Evaluation
-Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True/False, to choose between train a network or evaluate our pre-trained model (already included in ./checkpoints folder)
+Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True/False, to choose between train a network or evaluate a pre-trained model. By default, the code will load our datasplit (see *datasplit.pth* in ./checkpoints) as well as our pre-trained weights ( included in ./checkpoints folder).
 ```
 python CrossTask_main.py
 ```
