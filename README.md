@@ -22,5 +22,17 @@
 ## Code
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
 
-## Set up the data
-For each dataset, we provide two ways to use the data: (i) Download the pre-extracted features. (ii) Extract features from raw videos.
+## CrossTask
+### (i) Use pre-extracted features
+```bash
+cd datasets/CrossTask_assets
+wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_release.zip
+wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_features.zip
+wget https://www.eecs.yorku.ca/~hezhao/crosstask_s3d.zip
+unzip '*.zip'
+```
+### (ii) Extract feature from raw video
+```bash
+cd raw_data_pro
+```
+
