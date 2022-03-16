@@ -1,6 +1,6 @@
 # P3IV: Probabilistic Procedure Planning from Instructional Videos with Weak Supervision
 
-*[He Zhao](https://joehezhao.github.io/)*<sup>1,2</sup>, 
+*[He Zhao](https://joehezhao.github.io/)*<sup>2</sup>, 
 *[Isma Hadji](http://www.cse.yorku.ca/~hadjisma/)*<sup>1</sup>, 
 *[Nikita Dvornik](https://thoth.inrialpes.fr/people/mdvornik/)*<sup>1,3</sup>, 
 *[Konstantinos G. Derpanis](https://www.cs.ryerson.ca/kosta/)*<sup>1,2</sup>, 
