@@ -14,13 +14,13 @@ import json
 import pickle
 
 import collections
-from CrossTask.args import parse_args
-from CrossTask.CrossTask_dataloader import *
+from datasets.CrossTask_args import parse_args
+from datasets.CrossTask_dataloader import *
 
 from eval_util import *
 from utils import *
 from layers import *
-from model import *
+from models.model_CrossTask import *
 from collections import Counter
 import time
 
@@ -82,7 +82,7 @@ val_vids = {task: vids for task, vids in val_vids.items() if task in all_tasks}
 
 with open(os.path.join(args.data_path, "crosstask_release/cls_step.json"), "r") as f:
     step_cls = json.load(f)
-with open(os.path.join(args.data_path, "activity_step.json"), "r") as f:
+with open(os.path.join(args.data_path, "crosstask_release/activity_step.json"), "r") as f:
     act_cls = json.load(f)
 
 ##################################
@@ -259,7 +259,8 @@ bce_loss = th.nn.BCELoss()
 #########################################
 #  Load pre-trained language embedding  #
 #########################################
-with open("./act_lang_emb.pkl", "rb") as f:
+with open(os.path.join(
+    args.data_path, "crosstask_release/act_lang_emb.pkl"), "rb") as f:
     act_lang_emb = pickle.load(f)
 act_lang_emb_sorted = collections.OrderedDict(sorted(act_lang_emb.items()))
 act_tensor_list = list(act_lang_emb_sorted.values())
@@ -481,7 +482,7 @@ def train_regular(epoch):
         "Contrastive learning "
         act_tensor_enc = model.lang_encoder(act_tensor_emb)
         pred_state_enc = torch.stack(state_pred_list)
-        labels = torch.stack(label_list).view(-1).squeeze() - 1
+        labels = torch.stack(label_list).view(-1).squeeze() - 1 # minus 1 because action_id for CrossTask starts from 1;
         norm_pred = pred_state_enc.view(-1, args.d_model - args.noise_dim)
         norm_gt = act_tensor_enc
         # breakpoint()
@@ -1058,9 +1059,9 @@ def inference(epoch, model_path=False, num_sampling=50):
     mode_rst = []
     nll_rst = []
     if model_path:
-        model.load_state_dict(torch.load(model_path))
+        model.load_state_dict(torch.load(model_path), strict=False)
         print("loading model weights from {}".format(model_path))
-    model.eval()
+    # model.eval()
 
     with torch.no_grad():
         for idx, batch in enumerate(testloader):

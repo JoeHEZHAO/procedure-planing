@@ -31,7 +31,6 @@ def sample_softmax_with_temperature(logits, temperature=1):
     y = cache / cache.sum(dim=-1, keepdim=True)
     return y
 
-
 def compute_pairwise_distance(x):
     ''' computation of pairwise distance matrix
     ---- Input
@@ -46,7 +45,6 @@ def compute_pairwise_distance(x):
     else:
         raise NotImplementedError
     return matrix
-
 
 def compute_norm_pairwise_distance(x):
     ''' computation of normalized pairwise distance matrix

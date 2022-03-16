@@ -1,4 +1,4 @@
-"Recognition: This code base is inspired by AgentFormer, https://arxiv.org/abs/2103.14023."
+"Acknowledgement: This code base is largely inspired by AgentFormer (https://arxiv.org/abs/2103.14023)."
 import torch
 import numpy as np
 import math
