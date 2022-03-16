@@ -17,7 +17,7 @@
 ## Model
 <div align="center">
 <img src="img/cvpr_pic1.jpg" width=450px></img>
-</div}
+</div>
 
 ## Code
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
