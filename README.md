@@ -23,7 +23,7 @@
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
 
 ## CrossTask
-We provide two ways to step-up the dataset for CrossTask [1]
+We provide two ways to step-up the dataset for CrossTask [1]. You can
 ### (i) Use pre-extracted features
 ```
 cd datasets/CrossTask_assets
@@ -32,7 +32,7 @@ wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_features.zip
 wget https://www.eecs.yorku.ca/~hezhao/crosstask_s3d.zip
 unzip '*.zip'
 ```
-### Or, Extract feature from raw video
+### Or, extract features from raw video
 ```
 cd raw_data_process
 python download_CrossTask_videos.py
@@ -47,13 +47,13 @@ python CrossTask_main.py
 
 ## COIN
 Similarly, to use COIN dataset [2] on our approach, we provide
-### (i) Pre-extracted feature
+### (i) Pre-extracted features
 ```
 cd datasets/CrossTask_assets
 wget https://www.eecs.yorku.ca/~hezhao/coin_s3d.zip
 unzip '*.zip'
 ```
-### Or, Extract feature from raw video
+### or, extract features from raw video
 ```
 cd raw_data_process
 python download_COIN_videos.py
@@ -68,13 +68,13 @@ python COIN_main.py
 
 ## NIV
 For the NIV dataset [3], either use
-### (i) Pre-extracted feature
+### (i) Pre-extracted features
 ```
 cd datasets/NIV_assets
 wget https://www.eecs.yorku.ca/~hezhao/niv_s3d.zip
 unzip '*.zip'
 ```
-### Or, Extract feature from raw video
+### Or, extract features from raw video
 Download videos from project page of NIV, unzip it and move all mpg files to **datasets/NIV_assets/videos**
 ```
 cd datasets/NIV_assets/videos
