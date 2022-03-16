@@ -16,6 +16,6 @@
 
 ## Model
 <p float="left">
-  <img src="img/cvpr_pic1.jpg" width=310px></img>
-  <img src="img/cvpr_pic2.jpg" width=610px, height=210></img>
+  <img src="img/cvpr_pic1.jpg" width=310px, align="left"></img>
+  <img src="img/cvpr_pic2.jpg" width=610px, height=210, align="right"></img>
 </p}
