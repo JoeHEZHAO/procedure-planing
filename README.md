@@ -32,14 +32,14 @@ wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_features.zip
 wget https://www.eecs.yorku.ca/~hezhao/crosstask_s3d.zip
 unzip '*.zip'
 ```
-### (ii) Extract feature from raw video
+### Or, Extract feature from raw video
 ```
 cd raw_data_process
 python download_CrossTask_videos.py
 python InstVids2TFRecord_CrossTask.py
 bash lmdb_encode_CrossTask.sh 1 1
 ```
-### Train and Evaluation
+### (ii) Train and Evaluation
 Set the variable **train** (under "__main__") to either True/False, to choose between train a network or evaluate our pre-trained model (already included in ./checkpoints folder)
 ```
 python CrossTask_main.py
