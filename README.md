@@ -70,7 +70,7 @@ cd datasets/NIV_assets
 wget https://www.eecs.yorku.ca/~hezhao/niv_s3d.zip
 unzip '*.zip'
 ```
-or extract features from raw video by first
+or extract features from raw video by first downloading videos from official project page
 ```
 cd datasets/NIV_assets/videos
 wget https://www.di.ens.fr/willow/research/instructionvideos/data_new.tar.gz
