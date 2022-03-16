@@ -1373,7 +1373,7 @@ if __name__ == "__main__":
         model_path = (
             os.path.join(
                 'checkpoints',
-                "best_CrossTask.pth"
+                "CrossTask_best.pth"
             ),
         )
         inference(0, model_path=model_path[0], num_sampling=200)
