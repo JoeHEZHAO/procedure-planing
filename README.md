@@ -61,7 +61,35 @@ python InstVids2TFRecord_COIN.py
 bash lmdb_encode_COIN.sh 1 1
 ```
 ### (ii) Train and Evaluation
-Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True/False, to choose between train a network or evaluate our pre-trained model (already included in ./checkpoints folder)
+The code for COIN is in the same design before.
 ```
 python COIN_main.py
+```
+
+## NIV
+For the NIV dataset [3], either use
+### (i) Pre-extracted feature
+```
+cd datasets/NIV_assets
+wget https://www.eecs.yorku.ca/~hezhao/niv_s3d.zip
+unzip '*.zip'
+```
+### Or, Extract feature from raw video
+Download videos from project page of NIV, unzip it and move all mpg files to **datasets/NIV_assets/videos**
+```
+cd datasets/NIV_assets/videos
+wget https://www.di.ens.fr/willow/research/instructionvideos/data_new.tar.gz
+tar -xvzf data_new.tar.gz
+find ./data_new -type f -name “*.mpg” | xargs -iF mv F .
+```
+Then jump to raw_data_process and process raw videos
+```
+cd raw_data_process
+python InstVids2TFRecord_NIV.py
+bash lmdb_encode_NIV.sh 1 1
+```
+### (ii) Train and Evaluation
+The code for NIV is in the same design before.
+```
+python NIV_main.py
 ```
