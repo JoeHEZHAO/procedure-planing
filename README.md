@@ -16,7 +16,7 @@
 
 ## Model
 <div align='left'>
-  <img src="img/cvpr_pic1.jpg" style="display: inline; border-width: 0px;" width=410px></img>
+  <img src="img/cvpr_pic1.jpg" style="display: inline; border-width: 0px;" width=310px></img>
 </div>
 <div align='right'>
   <img src="img/cvpr_pic2.jpg" style="display: inline; border-width: 0px;" width=610px></img>
