@@ -23,9 +23,9 @@
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
 
 ## CrossTask
-We provide two ways to step-up the data
+We provide two ways to step-up the dataset for CrossTask [1]
 ### (i) Use pre-extracted features
-```bash
+```
 cd datasets/CrossTask_assets
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_release.zip
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_features.zip
@@ -33,10 +33,15 @@ wget https://www.eecs.yorku.ca/~hezhao/crosstask_s3d.zip
 unzip '*.zip'
 ```
 ### (ii) Extract feature from raw video
-```bash
+```
 cd raw_data_process
 python download_CrossTask_videos.py
 python InstVids2TFRecord_CrossTask.py
 bash lmdb_encode_CrossTask.sh 1 1
+```
+### Train and Evaluation
+Set the variable **train** (under "__main__") to either True/False, to choose between train a network or evaluate our pre-trained model (already included in ./checkpoints folder)
+```
+python CrossTask_main.py
 ```
 
