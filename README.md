@@ -93,3 +93,17 @@ The train/evaluation code for NIV is in the same design before.
 ```
 python NIV_main.py
 ```
+
+## Citation
+
+If you find this code useful in your work then please cite
+
+```bibtex
+@inproceedings{he2022p3iv,
+  title={P3IV: Probabilistic Procedure Planning from Instructional Videos with Weak Supervision},
+  author={He, Zhao and Hadji, Isma and Nikita, Dvornik and Konstantinos, G., Derpanis and Richard, P., Wildes and Allan, D., Jepson},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  month = {June.},
+  year={2022}
+}
+```
