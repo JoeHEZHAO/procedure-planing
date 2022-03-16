@@ -23,6 +23,7 @@
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
 
 ## CrossTask
+We provide two ways to step-up the data
 ### (i) Use pre-extracted features
 ```bash
 cd datasets/CrossTask_assets
@@ -33,6 +34,9 @@ unzip '*.zip'
 ```
 ### (ii) Extract feature from raw video
 ```bash
-cd raw_data_pro
+cd raw_data_process
+python download_CrossTask_videos.py
+python InstVids2TFRecord_CrossTask.py
+bash lmdb_encode_CrossTask.sh 1 1
 ```
 
