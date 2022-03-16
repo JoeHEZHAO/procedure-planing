@@ -16,5 +16,5 @@
 
 ## Model
 <div>
-<img src="img/cvpr_pic1.jpg" width=510px, align="center"></img>
+<img src="img/cvpr_pic1.jpg" width=450px, align="center"></img>
 </div}
