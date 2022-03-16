@@ -71,14 +71,14 @@ cd datasets/NIV_assets
 wget https://www.eecs.yorku.ca/~hezhao/niv_s3d.zip
 unzip '*.zip'
 ```
-or extract features from raw video
+or extract features from raw video by first
 ```
 cd datasets/NIV_assets/videos
 wget https://www.di.ens.fr/willow/research/instructionvideos/data_new.tar.gz
 tar -xvzf data_new.tar.gz
 find ./data_new -type f -name “*.mpg” | xargs -iF mv F .
 ```
-Then jump to raw_data_process and process raw videos
+and then jump to raw_data_process and process raw videos
 ```
 cd raw_data_process
 python InstVids2TFRecord_NIV.py
@@ -103,3 +103,10 @@ If you find this code useful in your work then please cite
   year={2022}
 }
 ```
+
+## References
+[1] D. Zhukov et al. "Cross-task weakly supervised learning from instructional videos." CVPR'19.
+
+[2] Y Tang et al. "COIN: A large-scale dataset for comprehensive instructional video analysis." CVPR'19
+
+[3] Jean-Baptiste Alayrac et al. "Unsupervised learning from narrated instruction videos." CVPR'16.
