@@ -45,3 +45,23 @@ Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either
 python CrossTask_main.py
 ```
 
+## COIN
+Similarly, to use COIN dataset [2] on our approach, we provide
+### (i) Pre-extracted feature
+```
+cd datasets/CrossTask_assets
+wget https://www.eecs.yorku.ca/~hezhao/coin_s3d.zip
+unzip '*.zip'
+```
+### Or, Extract feature from raw video
+```
+cd raw_data_process
+python download_COIN_videos.py
+python InstVids2TFRecord_COIN.py
+bash lmdb_encode_COIN.sh 1 1
+```
+### (ii) Train and Evaluation
+Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True/False, to choose between train a network or evaluate our pre-trained model (already included in ./checkpoints folder)
+```
+python COIN_main.py
+```
