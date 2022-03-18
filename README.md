@@ -23,7 +23,7 @@
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
 
 ## CrossTask
-(i) We provide two ways to step-up the dataset for CrossTask [1]. You can use pre-extracted features
+(i) **Step-up Dataset** We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
 ```
 cd datasets/CrossTask_assets
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_release.zip
@@ -31,7 +31,7 @@ wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_features.zip
 wget https://vision.eecs.yorku.ca/WebShare/CrossTask_s3d.zip
 unzip '*.zip'
 ```
-or extract features from raw video using the following code
+**or** extract features from raw video using the following code
 ```
 cd raw_data_process
 python download_CrossTask_videos.py
@@ -39,7 +39,7 @@ python InstVids2TFRecord_CrossTask.py
 bash lmdb_encode_CrossTask.sh 1 1
 ```
 (ii) Train and Evaluation
-Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True/False, to choose between train a network or evaluate a pre-trained model. By default, the code will load the used random datasplit (see datasplit.pth in ./checkpoints) as well as our pre-trained weights (included in ./checkpoints folder).
+Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True or False, to choose between training a network or evaluating a pre-trained model. By default, the code will load the used random datasplit (see datasplit.pth in ./checkpoints) as well as our pre-trained weights (included in ./checkpoints folder).
 ```
 python CrossTask_main.py
 ```
@@ -58,7 +58,7 @@ python download_COIN_videos.py
 python InstVids2TFRecord_COIN.py
 bash lmdb_encode_COIN.sh 1 1
 ```
-(ii) The train/evaluation code for COIN is in the same design before.
+(ii) The train/evaluation code for COIN is in the same design as before.
 ```
 python COIN_main.py
 ```
@@ -83,7 +83,7 @@ cd raw_data_process
 python InstVids2TFRecord_NIV.py
 bash lmdb_encode_NIV.sh 1 1
 ```
-(ii) The train/evaluation code for NIV is in the same design before.
+(ii) The train/evaluation code for NIV is in the same design as before.
 ```
 python NIV_main.py
 ```
