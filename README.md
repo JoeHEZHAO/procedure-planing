@@ -23,7 +23,7 @@
 This repository contains PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3].
 
 ## CrossTask
-(i) **Step-up Dataset** We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
+(i) **Step-up Dataset**. We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
 ```
 cd datasets/CrossTask_assets
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_release.zip
@@ -38,14 +38,13 @@ python download_CrossTask_videos.py
 python InstVids2TFRecord_CrossTask.py
 bash lmdb_encode_CrossTask.sh 1 1
 ```
-(ii) Train and Evaluation
-Set the variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True or False, to choose between training a network or evaluating a pre-trained model. By default, the code will load the used random datasplit (see datasplit.pth in ./checkpoints) as well as our pre-trained weights (included in ./checkpoints folder).
+(ii) **Train and Evaluation**. Set the hyper-variable **train** (under **if \_\_name\_\_ == \_\_main\_\_**) to either True or False, to choose between training a network or evaluating a pre-trained model. By default, the code will load the used random datasplit (see datasplit.pth in ./checkpoints) as well as our pre-trained weights (included in ./checkpoints folder).
 ```
 python CrossTask_main.py
 ```
 
 ## COIN
-(i) Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
+(i) **Step-up Dataset**. Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
 ```
 cd datasets/CrossTask_assets
 wget https://vision.eecs.yorku.ca/WebShare/COIN_s3d.zip
@@ -58,13 +57,13 @@ python download_COIN_videos.py
 python InstVids2TFRecord_COIN.py
 bash lmdb_encode_COIN.sh 1 1
 ```
-(ii) The train/evaluation code for COIN is in the same design as before.
+(ii) **Train and Evaluation**. The train/evaluation code for COIN is in the same design as before.
 ```
 python COIN_main.py
 ```
 
 ## NIV
-(i) For the NIV dataset [3], either use pre-extracted features
+(i) **Step-up Dataset**. For the NIV dataset [3], either use pre-extracted features
 ```
 cd datasets/NIV_assets
 wget https://vision.eecs.yorku.ca/WebShare/NIV_s3d.zip
@@ -83,7 +82,7 @@ cd raw_data_process
 python InstVids2TFRecord_NIV.py
 bash lmdb_encode_NIV.sh 1 1
 ```
-(ii) The train/evaluation code for NIV is in the same design as before.
+(ii) **Train and Evaluation**. The train/evaluation code for NIV is in the same design as before.
 ```
 python NIV_main.py
 ```
