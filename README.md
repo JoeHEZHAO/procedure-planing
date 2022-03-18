@@ -28,7 +28,7 @@ This repository contains PyTorch code for three datasets used in this paper: Cro
 cd datasets/CrossTask_assets
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_release.zip
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_features.zip
-wget https://www.eecs.yorku.ca/~hezhao/crosstask_s3d.zip
+wget https://vision.eecs.yorku.ca/WebShare/CrossTask_s3d.zip
 unzip '*.zip'
 ```
 or extract features from raw video using the following code
@@ -48,7 +48,7 @@ python CrossTask_main.py
 (i) Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
 ```
 cd datasets/CrossTask_assets
-wget https://www.eecs.yorku.ca/~hezhao/coin_s3d.zip
+wget https://vision.eecs.yorku.ca/WebShare/COIN_s3d.zip
 unzip '*.zip'
 ```
 or we support extracting features from raw video
@@ -67,7 +67,7 @@ python COIN_main.py
 (i) For the NIV dataset [3], either use pre-extracted features
 ```
 cd datasets/NIV_assets
-wget https://www.eecs.yorku.ca/~hezhao/niv_s3d.zip
+wget https://vision.eecs.yorku.ca/WebShare/NIV_s3d.zip
 unzip '*.zip'
 ```
 or extract features from raw video by first downloading videos from official project page
