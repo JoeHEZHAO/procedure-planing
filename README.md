@@ -19,7 +19,7 @@
 <img src="img/cvpr_pic1.jpg" width=450px></img>
 </div>
 
-## Code
+## Code Overview
 The following sections contain PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3]. You can choose between: (i) Using the prepared video features. (ii) Extracting the feature from scratch (e.g., raw videos). The second option allows for testing our approach on arbitrary datasets. 
 
 ## CrossTask
