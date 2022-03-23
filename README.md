@@ -87,6 +87,14 @@ bash lmdb_encode_NIV.sh 1 1
 python NIV_main.py
 ```
 
+(iii) **Results**
+## Result
+
+| **NIV**                       | **SR**  | **mAcc** | **mIoU** |
+| ------------------------------| ------- | -------- |----------|
+| **Viterbi **                  | 24.02   | 47.18    | 71.15    |  
+| **Argmax **                   | 15.32   | 43.84    | 71.05    | 
+
 ## Citation
 
 If you find this code useful in your work then please cite
