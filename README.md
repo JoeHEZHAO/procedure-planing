@@ -42,7 +42,7 @@ bash lmdb_encode_CrossTask.sh 1 1
 ```
 python CrossTask_main.py
 ```
-(iii) **Results** reproduced from pre-trained model
+(iii) **Results** reproduced from pre-trained model.
 | **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
 | **Viterbi**                  | 16.61   | 25.76    | 73.48    |  
@@ -66,7 +66,7 @@ bash lmdb_encode_COIN.sh 1 1
 ```
 python COIN_main.py
 ```
-(iii) **Results** reproduced from pre-trained model
+(iii) **Results** reproduced from pre-trained model. Note that figures in below table are slightly higher than those reported in the paper, as this table comes from one random split and paper reports averaged results from five random split.
 | **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
 | **Viterbi**                  | 16.61   | 25.76    | 73.48    |  
