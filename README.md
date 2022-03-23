@@ -20,7 +20,7 @@
 </div>
 
 ## Code Overview
-The following sections contain PyTorch code for three datasets used in this paper: CrossTask [1], COIN [2] and NIV [3]. You can choose between: (i) Using the prepared video features. (ii) Extracting the feature from scratch (e.g., raw videos). The second option allows for testing our approach on arbitrary datasets. 
+The following sections contain PyTorch code for running our approach on three datasets reported in this paper: CrossTask [1], COIN [2] and NIV [3]. You can choose between: (i) Using the prepared video features. (ii) Extracting the feature from scratch (e.g., raw videos). The second option allows for testing our approach on arbitrary datasets. The \{dataset\}\_main.py file contains both train and evaluation code, controlled by a hyper-parameter under ``\_\_main\_\_'' function.
 
 ## CrossTask
 (i) **Step-up Dataset**. We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
