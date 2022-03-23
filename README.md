@@ -42,6 +42,11 @@ bash lmdb_encode_CrossTask.sh 1 1
 ```
 python CrossTask_main.py
 ```
+(iii) **Results** from pre-trained model
+| **Prediction Horizon = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
+| -----------------------------| ------- | -------- |----------|
+| **Viterbi**                  | 16.61   | 25.76    | 73.48    |  
+| **Argmax**                   | 14.05   | 25.82    | 73.14    | 
 
 ## COIN
 (i) **Step-up Dataset**. Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
@@ -62,7 +67,7 @@ bash lmdb_encode_COIN.sh 1 1
 python COIN_main.py
 ```
 (iii) **Results** from pre-trained model
-| **COIN (T=3)**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
+| **Prediction Horizon = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
 | **Viterbi**                  | 16.61   | 25.76    | 73.48    |  
 | **Argmax**                   | 14.05   | 25.82    | 73.14    | 
@@ -93,7 +98,7 @@ python NIV_main.py
 ```
 
 (iii) **Results** from pre-trained model
-| **NIV (T=3)**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
+| **Prediction Horizon = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
 | **Viterbi**                  | 24.02   | 47.18    | 71.15    |  
 | **Argmax**                   | 15.32   | 43.84    | 71.05    | 
