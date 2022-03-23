@@ -22,12 +22,13 @@
 ## Code Overview
 The following sections contain PyTorch code for running our approach on three datasets reported in this paper: CrossTask [1], COIN [2] and NIV [3]. You can choose between: (i) Using the prepared video features. (ii) Extracting the feature from scratch (e.g., raw videos). The second option allows for testing our approach on arbitrary datasets. The **\{dataset\}\_main.py** file for each datasets contains both train and evaluation code, controlled by a hyper-parameter under **if \_\_name\_\_ == \_\_main\_\_** function.
 
-## Install Dependency
+## Dependency
 ```
 Pytorch > 1.8
 Tensorflow > 1.13 (Only for feature extraction from raw videos)
 pip install -r requirements.txt
 ```
+This code assumes CUDA support.
 
 ## CrossTask
 (i) **Set-up Dataset**. We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
