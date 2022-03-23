@@ -88,7 +88,7 @@ python NIV_main.py
 ```
 
 (iii) **Results** from pre-trained model
-| **NIV**                      | **SR**  | **mAcc** | **mIoU** |
+| **NIV**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
 | **Viterbi**                  | 24.02   | 47.18    | 71.15    |  
 | **Argmax**                   | 15.32   | 43.84    | 71.05    | 
