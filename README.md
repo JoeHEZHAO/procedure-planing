@@ -23,7 +23,7 @@
 The following sections contain PyTorch code for running our approach on three datasets reported in this paper: CrossTask [1], COIN [2] and NIV [3]. You can choose between: (i) Using the prepared video features. (ii) Extracting the feature from scratch (e.g., raw videos). The second option allows for testing our approach on arbitrary datasets. The **\{dataset\}\_main.py** file for each datasets contains both train and evaluation code, controlled by a hyper-parameter under **if \_\_name\_\_ == \_\_main\_\_** function.
 
 ## CrossTask
-(i) **Step-up Dataset**. We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
+(i) **Set-up Dataset**. We provide two ways to step-up the dataset for CrossTask [1]. You can **either** use pre-extracted features
 ```
 cd datasets/CrossTask_assets
 wget https://www.di.ens.fr/~dzhukov/crosstask/crosstask_release.zip
@@ -49,7 +49,7 @@ python CrossTask_main.py
 | **Argmax**                   | 14.05   | 25.82    | 73.14    | 
 
 ## COIN
-(i) **Step-up Dataset**. Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
+(i) **Set-up Dataset**. Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
 ```
 cd datasets/CrossTask_assets
 wget https://vision.eecs.yorku.ca/WebShare/COIN_s3d.zip
@@ -73,7 +73,7 @@ python COIN_main.py
 | **Argmax**                   | 14.05   | 25.82    | 73.14    | 
 
 ## NIV
-(i) **Step-up Dataset**. For the NIV dataset [3], either use pre-extracted features
+(i) **Set-up Dataset**. For the NIV dataset [3], either use pre-extracted features
 ```
 cd datasets/NIV_assets
 wget https://vision.eecs.yorku.ca/WebShare/NIV_s3d.zip
