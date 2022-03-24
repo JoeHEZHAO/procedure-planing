@@ -125,6 +125,9 @@ If you find this code useful in your work then please cite
 }
 ```
 
+## Contact
+Please contact He Zhao @ zhufl@eecs.yorku.ca if any issue.
+
 ## References
 [1] D. Zhukov et al. "Cross-task weakly supervised learning from instructional videos." CVPR'19.
 
