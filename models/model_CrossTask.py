@@ -17,7 +17,7 @@ class ProcedureFormer(nn.Module):
         super(ProcedureFormer, self).__init__()
         self.pos_encoder = PositionalAgentEncoding(
             d_model=d_model - noise_dim,
-            dropout=0.1, # first dropout that I have in my network.
+            dropout=0.1,
             concat=True,
             max_t_len=pred_horz + 1,
         )
@@ -27,7 +27,7 @@ class ProcedureFormer(nn.Module):
             d_model=d_model,
             nhead=nhead,
             dim_feedforward=f_model,
-            dropout=0.3, # 2nd dropout that I have in my network.
+            dropout=0.2,
         )
         self.tf_decoder = TransFormerDecoder(decoder_layers, num_layers=nlayer)
 
@@ -54,8 +54,6 @@ class ProcedureFormer(nn.Module):
         return self.discriminator2(x)
 
     def forward(self, x, pred_horz=3):
-
-        # How to incorporate batch processing?
         x = self.state_encoder(x)
 
         vis_emb_seq = torch.mean(x, dim=2)
