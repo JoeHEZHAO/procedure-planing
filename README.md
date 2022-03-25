@@ -53,8 +53,8 @@ python CrossTask_main.py
 (iii) **Results** reproduced from pre-trained model.
 | **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
-| **Viterbi**                  | 16.61   | 25.76    | 73.48    |  
-| **Argmax**                   | 14.05   | 25.82    | 73.14    | 
+| **Viterbi**                  | 23.58   | 52.62    | 73.50    |  
+| **Argmax**                   | 22.63   | 52.07    | 73.38    | 
 
 ## COIN
 (i) **Set-up Dataset**. Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
