@@ -53,7 +53,7 @@ python CrossTask_main.py
 (iii) **Results** reproduced from pre-trained model.
 | **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
 | -----------------------------| ------- | -------- |----------|
-| **Viterbi**                  | 23.58   | 52.62    | 73.50    |  
+| **Viterbi**                  | **23.58**   | 52.62    | **73.50**    |  
 | **Argmax**                   | 22.63   | 52.07    | 73.38    | 
 
 ## COIN
