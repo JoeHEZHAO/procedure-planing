@@ -619,8 +619,8 @@ def inference(epoch, model_path=False, num_sampling=1500):
                     rst_argmax.shape[0], args.pred_horz, -1), 1)
                 ref_onehot = ref_onehot_tmp.sum(0)
 
-                new_logits = F.softmax(ref_onehot / 100, -1)
-                # new_logits = F.softmax(ref_onehot, -1)
+                "Normalize with total number of samples"
+                new_logits = ref_onehot / num_sampling
 
                 #################
                 #  Run Viterbi  #

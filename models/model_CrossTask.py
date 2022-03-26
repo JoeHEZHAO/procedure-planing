@@ -27,7 +27,7 @@ class ProcedureFormer(nn.Module):
             d_model=d_model,
             nhead=nhead,
             dim_feedforward=f_model,
-            dropout=0.2,
+            dropout=0.3,
         )
         self.tf_decoder = TransFormerDecoder(decoder_layers, num_layers=nlayer)
 
