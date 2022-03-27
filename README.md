@@ -8,7 +8,7 @@
 *[Allan D. Jepson](https://www.cs.toronto.edu/~jepson/)*<sup>2</sup>,
 
 <sup>1</sup>York University &nbsp;&nbsp;
-<sup>2</sup>Samsung AI Center (SAIC) - Toronto &nbsp;&nbsp;
+<sup>2</sup>Samsung AI Centre (SAIC) Toronto &nbsp;&nbsp;
 <sup>3</sup>University of Toronto &nbsp;&nbsp;
 * This research was conducted while He was an intern at SAIC-Toronto and is funded by Samsung Research.
 
@@ -50,11 +50,11 @@ bash lmdb_encode_CrossTask.sh 1 1
 ```
 python CrossTask_main.py
 ```
-(iii) **Results** reproduced from pre-trained model.
-| **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** |
+(iii) **Results** reproduced from pre-trained model (Numbers may vary from runs to runs, due to probalistic sampling)
+| **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** | **NLL** | **ModeCoverPrecision** | **ModeCoverRecall** |
 | -----------------------------| ------- | -------- |----------|
-| **Viterbi**                  | **23.58**   | 52.62    | **73.50**    |  
-| **Argmax**                   | 22.63   | 52.07    | 73.38    | 
+| **Viterbi**                  | **23.40**   | 52.71    | **73.31**    |  4.13 | 35.62 | 66.03|
+| **Argmax**                   | 22.27   | 52.64    | 73.28    | - | - | - |
 
 ## COIN
 (i) **Set-up Dataset**. Similarly, to use COIN dataset [2] on our approach, we provide pre-extracted features
