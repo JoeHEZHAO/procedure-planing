@@ -44,6 +44,7 @@ bash lmdb_encode_CrossTask.sh 1 1
 ```
 (ii) **Train and Evaluation**. Set the hyper-variable **train** in  CrossTask_main.py (i.e., the one under **if \_\_name\_\_ == \_\_main\_\_**) to either True or False, to choose between training a network or evaluating a pre-trained model. By default, the code will load the used random datasplit (see datasplit.pth in ./checkpoints) as well as our pre-trained weights (included in ./checkpoints folder).
 ```
+# Set 'train' to (True, False) and then
 python CrossTask_main.py
 ```
 (iii) **Results** reproduced from pre-trained model (Numbers may **vary** from runs to runs, due to probalistic sampling)
