@@ -130,5 +130,7 @@ Please contact He Zhao @ zhufl@eecs.yorku.ca if any issue.
 
 ## References
 [1] D. Zhukov et al. "Cross-task weakly supervised learning from instructional videos." CVPR'19.
+
 [2] Y. Tang et al. "COIN: A large-scale dataset for comprehensive instructional video analysis." CVPR'19
+
 [3] JB. Alayrac et al. "Unsupervised learning from narrated instruction videos." CVPR'16.
