@@ -320,7 +320,7 @@ def train_complete_loss(epoch, NDR_train=True):
             label_onehot_list.append(y_onehot_tmp)
 
             label_list.append(w[:, 1:])
-            loss1.append(mse_loss(state.squeeze(), gt_state[:, 1:]))
+            loss1.append(mse_loss(state.squeeze(), gt_state[:, 1:])) # Strong supervision is not used.
             loss2.append(
                 ce_loss(logits.squeeze(),
                         w[:, 1:].squeeze().reshape(-1, 1).squeeze())
@@ -331,7 +331,7 @@ def train_complete_loss(epoch, NDR_train=True):
             #  Train with NDR  #
             ####################
             if NDR_train:
-                num_ndr_sample = 2
+                num_ndr_sample = 20
                 noise_z = (
                     torch.randn(num_ndr_sample,
                                 args.noise_dim).cuda()
@@ -435,9 +435,6 @@ def train_complete_loss(epoch, NDR_train=True):
             optimizer.step()
 
     print("For batch {}, finish traning".format(i))
-
-
-def train_regular(epoch):
     print("For epoch {}, start training the model-generator with regular loss".format(epoch))
     model.train()
 
