@@ -52,7 +52,7 @@ python CrossTask_main.py
 ```
 (iii) **Results** reproduced from pre-trained model (Numbers may vary from runs to runs, due to probalistic sampling)
 | **Prediction Horizon T = 3**                      | **Success Rate**  | **mean Accuracy** | **mIoU** | **NLL** | **ModeCoverPrecision** | **ModeCoverRecall** |
-| -----------------------------| ------- | -------- |----------|
+| -----------------------------| ------- | -------- |----------|----------|----------|----------|
 | **Viterbi**                  | **23.40**   | 52.71    | **73.31**    |  4.13 | 35.62 | 66.03|
 | **Argmax**                   | 22.27   | 52.64    | 73.28    | - | - | - |
 
