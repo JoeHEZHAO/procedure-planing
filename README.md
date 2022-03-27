@@ -26,6 +26,7 @@ The following sections contain PyTorch code for running our approach on three da
 * `conda create --channel conda-forge --name procedureFormer python=3.7.3`
 * `conda activate procedureFormer`
 * `conda install --file requirements.txt`
+
 This code assumes CUDA support.
 
 ## CrossTask
