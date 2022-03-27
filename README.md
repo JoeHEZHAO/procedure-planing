@@ -9,7 +9,7 @@
 
 <sup>1</sup>Samsung AI Centre (SAIC) Toronto &nbsp;&nbsp;
 <sup>2</sup>York University &nbsp;&nbsp; 
->>>This research was conducted while He was an intern at SAIC-Toronto and is funded by Samsung Research.
+>This research was conducted while He was an intern at SAIC-Toronto and is funded by Samsung Research.
 <div align="center">
 <img src="img/cvpr_pic1.jpg" width=450px></img>
 </div>
