@@ -1,14 +1,14 @@
 # P3IV: Probabilistic Procedure Planning from Instructional Videos with Weak Supervision
 
-*[He Zhao](https://joehezhao.github.io/)*<sup>1</sup>, 
-*[Isma Hadji](http://www.cse.yorku.ca/~hadjisma/)*<sup>2</sup>, 
-*[Nikita Dvornik](https://thoth.inrialpes.fr/people/mdvornik/)*<sup>2</sup>, 
+*[He Zhao](https://joehezhao.github.io/)*<sup>1,2</sup>, 
+*[Isma Hadji](http://www.cse.yorku.ca/~hadjisma/)*<sup>1</sup>, 
+*[Nikita Dvornik](https://thoth.inrialpes.fr/people/mdvornik/)*<sup>1</sup>, 
 *[Konstantinos G. Derpanis](https://www.cs.ryerson.ca/kosta/)*<sup>1,2</sup>, 
 *[Richard P. Wildes](http://www.cse.yorku.ca/~wildes/)*<sup>1,2</sup>, 
-*[Allan D. Jepson](https://www.cs.toronto.edu/~jepson/)*<sup>2</sup>,
+*[Allan D. Jepson](https://www.cs.toronto.edu/~jepson/)*<sup>1</sup>,
 
-<sup>1</sup>York University &nbsp;&nbsp;
-<sup>2</sup>Samsung AI Centre (SAIC) Toronto &nbsp;&nbsp;
+<sup>1</sup>Samsung AI Centre (SAIC) Toronto &nbsp;&nbsp;
+<sup>2</sup>York University &nbsp;&nbsp; 
 * This research was conducted while He was an intern at SAIC-Toronto and is funded by Samsung Research.
 <div align="center">
 <img src="img/cvpr_pic1.jpg" width=450px></img>
